@@ -51,7 +51,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
         Optional<User> user = userRepository.findByUsername(username);
 
         if (user.isEmpty())
-            throw new UsernameNotFoundException("user not found!");
+            throw new UsernameNotFoundException("user not found with username: " + username);
 
         return new User(user.get());
     }

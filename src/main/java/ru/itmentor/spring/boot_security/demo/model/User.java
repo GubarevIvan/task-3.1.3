@@ -1,7 +1,11 @@
 package ru.itmentor.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.itmentor.spring.boot_security.demo.pojo.SignupRequest;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.*;
@@ -9,32 +13,28 @@ import java.util.*;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+    private static final long serialVersionUID = 1;
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "UserName should not to be empty.")
-    @Size(min = 2, max = 25, message = "Name should be between 2 and 25 characters.")
     @Column(name = "username")
     private String username;
 
-    @NotEmpty(message = "Name should not to be empty.")
-    @Size(min = 2, max = 25, message = "Name should be between 2 and 25 characters.")
     @Column(name = "last_name")
+    @UniqueElements
     private String lastName;
 
-    @Min(value = 0, message = "Age should be greater than 0.")
     @Column(name = "age")
     private int age;
 
     @Column(name = "email")
-    @NotEmpty(message = "Email should not be empty")
     @Email
     private String email;
 
     @Column(name = "password")
-    @NotEmpty(message = "Password should not be empty")
+    @JsonIgnore
     private String password;
 
 
@@ -48,7 +48,7 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setRole(Set<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
@@ -74,14 +74,6 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public User(String username, String lastName, int age, String email, String password, HashSet<Role> roles) {
-        this.username = username;
-        this.lastName = lastName;
-        this.age = age;
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
-    }
     public User(User client) {
         this.username = client.getUsername();
         this.lastName = client.getLastName();
