@@ -1,7 +1,6 @@
 package ru.itmentor.spring.boot_security.demo.service;
 
 import org.springframework.stereotype.Service;
-import ru.itmentor.spring.boot_security.demo.model.ERole;
 import ru.itmentor.spring.boot_security.demo.model.Role;
 import ru.itmentor.spring.boot_security.demo.repositories.RoleRepository;
 
@@ -14,7 +13,8 @@ public class RoleService {
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
-    public Optional<Role> findByUserRole(ERole userRole) {
+    public Optional<Role> findByUserRole(String userRole) {
+        System.out.println(userRole);
        return roleRepository.findByUserRole(userRole);
     }
 }

@@ -17,11 +17,12 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
+        System.out.println("generateJwtToken");
         User userPrincipal = (User) authentication.getPrincipal();
 
         return Jwts.builder().setSubject((userPrincipal.getUsername())).setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.ES512, jwtSecret).compact();
+                .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
     }
 
     public boolean validateJwtToken(String jwt) {

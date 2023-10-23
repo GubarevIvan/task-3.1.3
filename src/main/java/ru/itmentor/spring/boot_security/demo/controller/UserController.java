@@ -6,7 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.model.User;
-import ru.itmentor.spring.boot_security.demo.service.UserService;
+import ru.itmentor.spring.boot_security.demo.pojo.*;
+import ru.itmentor.spring.boot_security.demo.service.*;
 import java.util.List;
 
 @RestController
@@ -14,11 +15,13 @@ import java.util.List;
 @PreAuthorize("hasAnyRole('ADMIN')")
 public class UserController {
    private final UserService userService;
+   private final RegistrationService registrationService;
 
    @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RegistrationService registrationService) {
         this.userService = userService;
-    }
+       this.registrationService = registrationService;
+   }
 
     @GetMapping()
     public ResponseEntity<List<User>> readAll() {
@@ -30,13 +33,19 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody User user) {
-        userService.save(user);
+    public ResponseEntity<?> create(@RequestBody SignupRequest signupRequest) {
+        if (!userService.findByUsername(signupRequest.getUsername()).isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is exist"));
+        }
+        registrationService.registration(signupRequest);
         return ResponseEntity.ok(HttpStatus.OK);
     }
     @PatchMapping("/{id}")
-    public ResponseEntity<HttpStatus> update(@RequestBody User user, @PathVariable("id") int id) {
-        userService.update((long)id, user);
+    public ResponseEntity<HttpStatus> update(@RequestBody SignupRequest signupRequest, @PathVariable("id") int id) {
+        signupRequest.setId((long)id);
+        registrationService.registration(signupRequest);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

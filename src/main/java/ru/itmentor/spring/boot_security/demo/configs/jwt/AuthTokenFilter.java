@@ -8,31 +8,21 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.UserServiceImp;
-
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
-    private  JwtUtils jwtUtils;
-    private  UserServiceImp userServiceImpl;
-
-
-
     @Autowired
-    public AuthTokenFilter(JwtUtils jwtUtils, UserServiceImp userServiceImpl) {
-        this.jwtUtils = jwtUtils;
-        this.userServiceImpl = userServiceImpl;
-    }
-    public AuthTokenFilter() {
-    }
+    private JwtUtils jwtUtils;
+    @Autowired
+    private UserServiceImp userServiceImpl;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt =parseJwt(request);
+            String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFormJwtToken(jwt);
 

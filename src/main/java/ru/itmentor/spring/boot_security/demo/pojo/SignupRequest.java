@@ -1,7 +1,5 @@
 package ru.itmentor.spring.boot_security.demo.pojo;
 
-import ru.itmentor.spring.boot_security.demo.model.Role;
-
 import java.util.Set;
 
 public class SignupRequest {
@@ -11,6 +9,7 @@ public class SignupRequest {
     private String email;
     private Set<String> roles;
     private String password;
+    private Long id;
 
     public SignupRequest() {}
 
@@ -22,6 +21,24 @@ public class SignupRequest {
         this.email = email;
         this.roles = roles;
         this.password = password;
+    }
+    public SignupRequest(String username, String lastName, Integer age, Long id,
+                         String email, Set<String> roles, String password) {
+        this.username = username;
+        this.lastName = lastName;
+        Age = age;
+        this.email = email;
+        this.roles = roles;
+        this.password = password;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getLastName() {

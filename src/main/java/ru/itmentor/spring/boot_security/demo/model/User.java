@@ -1,11 +1,8 @@
 package ru.itmentor.spring.boot_security.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.itmentor.spring.boot_security.demo.pojo.SignupRequest;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.*;
@@ -23,7 +20,6 @@ public class User implements UserDetails {
     private String username;
 
     @Column(name = "last_name")
-    @UniqueElements
     private String lastName;
 
     @Column(name = "age")
@@ -37,8 +33,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
-
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "user_role_table",
     joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
     inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
@@ -67,11 +62,12 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String username, String lastName, int age, String email) {
+    public User(String username, String lastName, int age, String email, String password) {
         this.username = username;
         this.lastName = lastName;
         this.age = age;
         this.email = email;
+        this.password = password;
     }
 
     public User(User client) {
